@@ -11,12 +11,26 @@ jQuery(document).ready(function($) {
         sequence.push(Math.floor(Math.random() * maxLength) + 1);
     }
 
-    console.log(sequence);
-
     for(var i = 0; i < sequence.length; i++) {
         // play sequence
         // $('.character').eq(sequence[i]).animate({ fontSize : '30px '}).css({ color: 'red'});
         $('.sequence').append(charOrder[sequence[i] - 1]);
+        // animate sequence starting at 0 (first element)
+        playSequence(0);
+
+        // $('.character:eq(' + sequence[i] + ')').animate({ 
+        //     width: '170',
+        //     height: '220',
+        //     marginLeft: 0,
+        //     marginTop: 0
+        // }, 150, function() {
+        //     $(this).animate({
+        //         width: '150',
+        //         height: '200',
+        //         marginLeft: '10px',
+        //         marginTop: '10px'
+        //     }, 150);
+        // })
     }
 
     $('.character').click(function(e) {
@@ -27,13 +41,15 @@ jQuery(document).ready(function($) {
         $(this).animate({ 
             width: '170',
             height: '220',
-            marginLeft: '7px'
-        }, 250, function() {
+            marginLeft: 0,
+            marginTop: 0
+        }, 150, function() {
             $(this).animate({
                 width: '150',
                 height: '200',
-                marginLeft: '1em'
-            }, 250);
+                marginLeft: '10px',
+                marginTop: '10px'
+            }, 150);
         });
 
         userSequence.push($this.index());
@@ -79,6 +95,31 @@ jQuery(document).ready(function($) {
         }
 
         return true;
+    }
+
+    function playSequence(i) {
+        var el = $('.character:eq(' + sequence[i] + ')');
+        console.log(sequence);
+        console.log(el);
+
+        el.animate({ 
+            width: '170',
+            height: '220',
+            marginLeft: 0,
+            marginTop: 0
+        }, 150, function() {
+            $(this).animate({
+                width: '150',
+                height: '200',
+                marginLeft: '10px',
+                marginTop: '10px'
+            }, 150);
+        });
+
+        i++;
+        if(i < sequence.length) {
+            setTimeout(function() { playSequence(i); }, 1000);
+        }
     }
 
 });
