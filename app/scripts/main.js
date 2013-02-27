@@ -3,20 +3,23 @@ jQuery(document).ready(function($) {
     var charOrder = ['Red', 'Gold', 'Purple', 'Blue', 'Green'];
     var sequence = [];
     var userSequence = [];
+    var userReadable = [];
     var maxLength = $('.character').length;
     var count = 0;
     var correct = true;
+    var order = [];
 
     for(var i = 0; i < maxLength; i++) {
-        sequence.push(Math.floor(Math.random() * maxLength) + 1);
+        sequence.push(Math.floor(Math.random() * maxLength));
     }
 
     for(var i = 0; i < sequence.length; i++) {
         // play sequence
         // $('.character').eq(sequence[i]).animate({ fontSize : '30px '}).css({ color: 'red'});
-        $('.sequence').append(charOrder[sequence[i] - 1]);
+        // readable version of sequence - used at end of game if wrong
+        order.push(charOrder[sequence[i]]);
         // animate sequence starting at 0 (first element)
-        playSequence(0);
+        setTimeout(function() { playSequence(0); }, 1000);
 
         // $('.character:eq(' + sequence[i] + ')').animate({ 
         //     width: '170',
@@ -34,8 +37,11 @@ jQuery(document).ready(function($) {
     }
 
     $('.character').click(function(e) {
+
         e.preventDefault();
         var $this = $(this);
+
+        console.log($this.index()); 
 
         // TODO: hardcoded animation
         $(this).animate({ 
@@ -53,7 +59,8 @@ jQuery(document).ready(function($) {
         });
 
         userSequence.push($this.index());
-        $('.user').text(userSequence);
+        userReadable.push(charOrder[$this.index()]);
+        $('.user').text(userReadable);
 
         // $this.data('original-size', $this.css('fontSize'));
 
@@ -64,6 +71,8 @@ jQuery(document).ready(function($) {
         count++;
 
         if(count === maxLength) {
+            console.log(sequence, userSequence);
+
             $('#main').append('<span class="message">Checking...</span>');
             correct = checkSequence(sequence, userSequence);
 
@@ -71,15 +80,15 @@ jQuery(document).ready(function($) {
                 $('.message').text('Correct');
             } else {
                 $('.message').text('Wrong!');
+                $('.sequence').hide().append(order).fadeIn('slow');
             }
         }
 
-        
     });
 
-    function normalSize(el) {
-        el.animate({ fontSize : el.data('original-size') }, 250);
-    }
+    // function normalSize(el) {
+    //     el.animate({ fontSize : el.data('original-size') }, 250);
+    // }
 
     function checkSequence(a1, a2) {
         // Checks if each item in two arrays are equal
@@ -98,10 +107,8 @@ jQuery(document).ready(function($) {
     }
 
     function playSequence(i) {
-        var el = $('.character:eq(' + sequence[i] + ')');
-        console.log(sequence);
-        console.log(el);
-
+        // animate each element in sequence
+        var el = $('.character:eq(' + parseInt(sequence[i]) + ')');
         el.animate({ 
             width: '170',
             height: '220',
