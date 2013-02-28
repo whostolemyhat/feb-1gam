@@ -9,6 +9,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: Verdana, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5em;
 }
 
 .container {
@@ -23,7 +25,8 @@ body {
 
 .hero-unit {
     overflow: auto;
-    height: 500px;
+    height: 300px;
+    display: none;
 }
 
 .character {

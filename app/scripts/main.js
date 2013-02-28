@@ -8,33 +8,15 @@ jQuery(document).ready(function($) {
     var count = 0;
     var correct = true;
     var order = [];
+    score = 0;
 
-    for(var i = 0; i < maxLength; i++) {
-        sequence.push(Math.floor(Math.random() * maxLength));
-    }
+    
 
-    for(var i = 0; i < sequence.length; i++) {
-        // play sequence
-        // $('.character').eq(sequence[i]).animate({ fontSize : '30px '}).css({ color: 'red'});
-        // readable version of sequence - used at end of game if wrong
-        order.push(charOrder[sequence[i]]);
-        // animate sequence starting at 0 (first element)
-        setTimeout(function() { playSequence(0); }, 1000);
-
-        // $('.character:eq(' + sequence[i] + ')').animate({ 
-        //     width: '170',
-        //     height: '220',
-        //     marginLeft: 0,
-        //     marginTop: 0
-        // }, 150, function() {
-        //     $(this).animate({
-        //         width: '150',
-        //         height: '200',
-        //         marginLeft: '10px',
-        //         marginTop: '10px'
-        //     }, 150);
-        // })
-    }
+    $('#play').click(function(e) {
+        e.preventDefault();
+        $('.hero-unit').slideDown();
+        init();
+    });
 
     $('.character').click(function(e) {
 
@@ -71,24 +53,26 @@ jQuery(document).ready(function($) {
         count++;
 
         if(count === maxLength) {
-            console.log(sequence, userSequence);
+            // console.log(sequence, userSequence);
 
             $('#main').append('<span class="message">Checking...</span>');
             correct = checkSequence(sequence, userSequence);
 
             if(correct) {
                 $('.message').text('Correct');
+                score += 100;
+
+                // next round
+                setTimeout(init, 300);
+
             } else {
-                $('.message').text('Wrong!');
+                $('.message').text('Wrong! Game Over');
                 $('.sequence').hide().append(order).fadeIn('slow');
             }
+            $('#score').text(score);
         }
 
     });
-
-    // function normalSize(el) {
-    //     el.animate({ fontSize : el.data('original-size') }, 250);
-    // }
 
     function checkSequence(a1, a2) {
         // Checks if each item in two arrays are equal
@@ -126,6 +110,30 @@ jQuery(document).ready(function($) {
         i++;
         if(i < sequence.length) {
             setTimeout(function() { playSequence(i); }, 1000);
+        }
+    }
+
+    function init() {
+        sequence = [];
+        userSequence = [];
+        userReadable = [];
+        order = [];
+        count = 0;
+        correct = true;
+
+        $('.message').text('Next round');
+        $('.sequence').hide();
+
+
+        for(var i = 0; i < maxLength; i++) {
+            sequence.push(Math.floor(Math.random() * maxLength));
+        }
+
+        for(var i = 0; i < sequence.length; i++) {
+            // readable version of sequence - used at end of game if wrong
+            order.push(charOrder[sequence[i]]);
+            // animate sequence starting at 0 (first element)
+            setTimeout(function() { playSequence(0); }, 500);
         }
     }
 
